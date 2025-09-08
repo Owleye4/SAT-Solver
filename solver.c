@@ -101,28 +101,28 @@ static int timed_out(const SolverCtx *ctx) {
 }
 
 static int dpll_recursive_ctx(SolverCtx *ctx) {
-	if (timed_out(ctx)) return -1; // timeout
+	if (timed_out(ctx)) return -1;
 	if (!unit_propagate(ctx->cnf, ctx->assignment)) return 0;
 	if (all_clauses_satisfied(ctx->cnf, ctx->assignment)) return 1;
 	int var = choose_unassigned_variable(ctx->cnf, ctx->assignment);
-	if (var == -1) return 0; // not satisfied but no vars left
+	if (var == -1) return 0;
 
-	// Snapshot assignment for proper backtracking (includes unit propagation effects)
+	// Snapshot assignment for proper backtracking
 	int num = ctx->assignment->num_variables;
 	int *backup = (int *)malloc((size_t)(num + 1) * sizeof(int));
-	if (!backup) return -1; // treat OOM as timeout/error to abort
+	if (!backup) return -1;
 	memcpy(backup, ctx->assignment->values, (size_t)(num + 1) * sizeof(int));
 
 	// Branch var = True
 	ctx->assignment->values[var] = 1;
 	int r = dpll_recursive_ctx(ctx);
-	if (r != 0) { free(backup); if (r == -1) return -1; return 1; }
+	if (r != 0) { free(backup); return (r == -1) ? -1 : 1; }
 
 	// Restore and try var = False
 	memcpy(ctx->assignment->values, backup, (size_t)(num + 1) * sizeof(int));
 	ctx->assignment->values[var] = -1;
 	r = dpll_recursive_ctx(ctx);
-	if (r != 0) { free(backup); if (r == -1) return -1; return 1; }
+	if (r != 0) { free(backup); return (r == -1) ? -1 : 1; }
 
 	// Restore and report UNSAT for this branch point
 	memcpy(ctx->assignment->values, backup, (size_t)(num + 1) * sizeof(int));

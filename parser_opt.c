@@ -75,7 +75,6 @@ int parse_cnf_file_opt(const char *path, OptCNF *out) {
 		token[len] = '\0';
 		int lit = atoi(token);
 		if (lit == 0) {
-			// Empty token or stray zero: treat as clause separator; ignore
 			continue;
 		}
 		// Begin a new clause: we already have first literal
@@ -94,8 +93,6 @@ int parse_cnf_file_opt(const char *path, OptCNF *out) {
 			out->literals_pool[out->pool_len++] = lit;
 			cl->num_literals++;
 			// read next token until we hit 0
-			// fast-scan numbers
-			// skip spaces
 			while ((c = fgetc(fp)) != EOF && isspace(c)) {}
 			if (c == EOF) break;
 			if (c == 'c' || c == 'C') { while ((c = fgetc(fp)) != EOF && c != '\n') {} continue; }
@@ -108,7 +105,7 @@ int parse_cnf_file_opt(const char *path, OptCNF *out) {
 			}
 			token[len] = '\0';
 			lit = atoi(token);
-			if (lit == 0) break; // end of clause
+			if (lit == 0) break;
 		}
 		clause_idx++;
 	}

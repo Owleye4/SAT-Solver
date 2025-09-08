@@ -45,10 +45,10 @@ int main(int argc, char **argv) {
 	int conv_ok = 0;
 	if (opt_ok == 0) {
 		conv_ok = (opt_cnf_to_cnf(&ocnf, &cnf_opt) == 0);
+		free_opt_cnf(&ocnf);
 	}
 	clock_t q1 = clock();
 	double t_parse_opt_ms = (double)(q1 - q0) * 1000.0 / (double)CLOCKS_PER_SEC;
-	if (opt_ok == 0) free_opt_cnf(&ocnf);
 
 	Assignment model;
 	double ms = 0.0;

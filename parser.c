@@ -84,7 +84,6 @@ int parse_cnf_file(const char *path, CNF *out) {
 	while (cls_idx < num_clauses && read_token(fp, tok, sizeof(tok))) {
 		if (tok[0] == 'c') { skip_line(fp); continue; }
 		int lit = atoi(tok);
-		// Expect zero-terminated clause; ignore extra whitespace/newlines
 		if (lit == 0) {
 			// end of clause, store it
 			Clause *cl = &out->clauses[cls_idx++];
