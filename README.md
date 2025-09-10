@@ -4,6 +4,7 @@
 
 ## 功能
 
+- **集成主程序**: 统一的入口点，支持SAT和数独两种模式
 - **SAT求解器**: 实现DPLL算法，支持DIMACS CNF格式
 - **数独求解**: 将数独问题转换为SAT问题求解
 - **图形界面**: Windows GUI，支持交互式数独编辑和求解
@@ -21,13 +22,37 @@ make sat_solver
 # 仅编译GUI (Windows)
 make display
 
+# 仅编译集成主程序
+make main
+
 # 清理
 make clean
 ```
 
 ## 使用
 
-### SAT求解器
+### 集成主程序 (推荐)
+```bash
+# 交互式模式选择
+./main
+
+# 直接运行SAT模式
+./main SAT
+
+# 直接运行数独模式
+./main %-Sudoku
+
+# 显示帮助
+./main --help
+```
+
+**主程序特性**:
+- **统一入口**: 一个可执行文件包含所有功能
+- **交互式选择**: 启动时可以选择运行模式
+- **命令行支持**: 支持直接指定模式运行
+- **完整功能**: 包含SAT求解和数独GUI的所有功能
+
+### 独立SAT求解器
 ```bash
 # 基本用法
 ./sat_solver input.cnf
@@ -36,7 +61,7 @@ make clean
 ./sat_solver input.cnf --print --model --timeout 5000 --check
 ```
 
-### 数独GUI
+### 独立数独GUI
 ```bash
 # 运行图形界面
 ./display.exe <sudoku_file>.txt

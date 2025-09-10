@@ -7,6 +7,7 @@ WIN32_FLAGS := -D_WIN32 -mwindows -lcomctl32
 # Targets
 SAT_BIN := sat_solver
 GUI_BIN := display
+MAIN_BIN := main
 
 # Source files
 SAT_SOURCES := parser.c solver.c sat_solver.c parser_opt.c
@@ -16,7 +17,7 @@ SHARED_SOURCES := parser.c solver.c parser_opt.c
 .PHONY: all clean
 
 # Default target
-all: $(SAT_BIN) $(GUI_BIN)
+all: $(SAT_BIN) $(GUI_BIN) $(MAIN_BIN)
 
 # SAT Solver
 $(SAT_BIN): $(SAT_SOURCES:.c=.o)
@@ -25,6 +26,10 @@ $(SAT_BIN): $(SAT_SOURCES:.c=.o)
 # GUI (Windows only)
 $(GUI_BIN): $(GUI_SOURCES:.c=.o) $(SHARED_SOURCES:.c=.o)
 	$(CC) $(CFLAGS) $(WIN32_FLAGS) -o $@ $^
+
+# Main integrated program
+$(MAIN_BIN): main.c $(SHARED_SOURCES:.c=.o) sudoku.c display.c
+	$(CC) $(CFLAGS) -D_WIN32 -o $@ $^ -lcomctl32 -lgdi32 -luser32
 
 # GUI-specific compilation
 display.o: display.c
